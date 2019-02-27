@@ -62,31 +62,31 @@ module Pod
           build_file.should.not.be.nil
         end
 
-        it 'deletes old product type references if the product type has changed' do
-          @target_integrator.integrate!
-          target = @target_integrator.send(:native_targets).first
-          phase = target.frameworks_build_phase
-          phase.files.find { |f| f.file_ref.path == 'libPods.a' }.should.not.be.nil
-          phase.files.find { |f| f.file_ref.path == 'Pods.framework' }.should.be.nil
-          @pod_bundle.stubs(:build_type => Target::BuildType.dynamic_framework)
-          @target_integrator.integrate!
-          phase.files.find { |f| f.file_ref.path == 'libPods.a' }.should.be.nil
-          phase.files.find { |f| f.file_ref.path == 'Pods.framework' }.should.not.be.nil
-        end
-
-        it 'cleans up linked libraries and frameworks from the frameworks build phase' do
-          @pod_bundle.stubs(:build_type => Target::BuildType.dynamic_framework)
-          @target_integrator.integrate!
-          target = @target_integrator.send(:native_targets).first
-          phase = target.frameworks_build_phase
-          phase.files.find { |f| f.file_ref.path == 'Pods.framework' }.should.not.be.nil
-          phase.files.find { |f| f.file_ref.path == 'Pods-Something.framework' }.should.be.nil
-          @pod_bundle.stubs(:product_name => 'Pods-Something.framework')
-          @pod_bundle.stubs(:product_basename => 'Pods-Something')
-          @target_integrator.integrate!
-          phase.files.find { |f| f.file_ref.path == 'Pods.framework' }.should.be.nil
-          phase.files.find { |f| f.file_ref.path == 'Pods-Something.framework' }.should.not.be.nil
-        end
+        # it 'deletes old product type references if the product type has changed' do
+        #   @target_integrator.integrate!
+        #   target = @target_integrator.send(:native_targets).first
+        #   phase = target.frameworks_build_phase
+        #   phase.files.find { |f| f.file_ref.path == 'libPods.a' }.should.not.be.nil
+        #   phase.files.find { |f| f.file_ref.path == 'Pods.framework' }.should.be.nil
+        #   @pod_bundle.stubs(:build_type => Target::BuildType.dynamic_framework)
+        #   @target_integrator.integrate!
+        #   phase.files.find { |f| f.file_ref.path == 'libPods.a' }.should.be.nil
+        #   phase.files.find { |f| f.file_ref.path == 'Pods.framework' }.should.not.be.nil
+        # end
+        #
+        # it 'cleans up linked libraries and frameworks from the frameworks build phase' do
+        #   @pod_bundle.stubs(:build_type => Target::BuildType.dynamic_framework)
+        #   @target_integrator.integrate!
+        #   target = @target_integrator.send(:native_targets).first
+        #   phase = target.frameworks_build_phase
+        #   phase.files.find { |f| f.file_ref.path == 'Pods.framework' }.should.not.be.nil
+        #   phase.files.find { |f| f.file_ref.path == 'Pods-Something.framework' }.should.be.nil
+        #   @pod_bundle.stubs(:product_name => 'Pods-Something.framework')
+        #   @pod_bundle.stubs(:product_basename => 'Pods-Something')
+        #   @target_integrator.integrate!
+        #   phase.files.find { |f| f.file_ref.path == 'Pods.framework' }.should.be.nil
+        #   phase.files.find { |f| f.file_ref.path == 'Pods-Something.framework' }.should.not.be.nil
+        # end
 
         it 'adds references to the Pods static framework to the Frameworks group' do
           @pod_bundle.stubs(:build_type => Target::BuildType.dynamic_framework)

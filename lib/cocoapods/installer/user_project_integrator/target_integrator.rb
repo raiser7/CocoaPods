@@ -380,18 +380,6 @@ module Pod
             build_phase = native_target.frameworks_build_phase
             product_name = target.product_name
 
-            # Delete previously integrated references.
-            product_build_files = build_phase.files.select do |build_file|
-              build_file.display_name =~ Pod::Deintegrator::FRAMEWORK_NAMES
-            end
-
-            product_build_files.each do |product_file|
-              next unless product_name != product_file.display_name
-              UI.message("Removing old product reference `#{product_file.display_name}` from project.")
-              frameworks.remove_reference(product_file.file_ref)
-              build_phase.remove_build_file(product_file)
-            end
-
             # Find or create and add a reference for the current product type
             new_product_ref = frameworks.files.find { |f| f.path == product_name } ||
                 frameworks.new_product_ref_for_target(target.product_basename, target.product_type)
