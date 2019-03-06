@@ -52,7 +52,7 @@ module Pod
             next if %w(SampleProject SampleProjectTests).include?(target.name)
             Deintegrator.any_instance.expects(:deintegrate_target).with(target)
           end
-          @integrator.stubs(:user_projects).returns([additional_project, user_project])
+          @integrator.stubs(:user_projects_to_integrate).returns([additional_project, user_project])
 
           @integrator.send(:integrate_user_targets)
         end
@@ -185,12 +185,12 @@ module Pod
         end
 
         it 'raises if no workspace could be selected' do
-          @integrator.expects(:user_project_paths).returns(%w( project1 project2          ))
+          @integrator.expects(:user_project_paths_to_integrate).returns(%w( project1 project2          ))
           lambda { @integrator.send(:workspace_path) }.should.raise Informative
         end
 
         it 'returns the paths of the user projects' do
-          @integrator.send(:user_project_paths).should == [@sample_project_path]
+          @integrator.send(:user_project_paths_to_integrate).should == [@sample_project_path]
         end
 
         it 'does not skip libraries with empty target definitions' do
@@ -204,7 +204,7 @@ module Pod
           project.expects(:dirty?).returns(false)
           project.expects(:save).never
 
-          @integrator.stubs(:user_projects).returns([project])
+          @integrator.stubs(:user_projects_to_integrate).returns([project])
           FileUtils.expects(:touch).with(project.path + 'project.pbxproj')
 
           @integrator.send(:save_projects)
@@ -216,7 +216,7 @@ module Pod
           project.expects(:dirty?).returns(true)
           project.expects(:save).once
 
-          @integrator.stubs(:user_projects).returns([project])
+          @integrator.stubs(:user_projects_to_integrate).returns([project])
           FileUtils.expects(:touch).never
 
           @integrator.send(:save_projects)
