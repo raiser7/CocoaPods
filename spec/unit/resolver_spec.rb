@@ -385,7 +385,7 @@ Note: as of CocoaPods 1.0, `pod repo update` does not happen on `pod install` by
           pod 'Reachability', :podspec => podspec_path
         end
 
-        locked_dep = Dependency.new('Reachability')
+        locked_dep = Dependency.new('Reachability', Requirement.create('= 3.0.0'))
         locked_dep.external_source = { :podspec => podspec_path }
         locked_deps = dependency_graph_from_array([locked_dep])
 
@@ -397,11 +397,8 @@ Note: as of CocoaPods 1.0, `pod repo update` does not happen on `pod install` by
 
         resolver = create_resolver(podfile, locked_deps)
         e = lambda { resolver.resolve }.should.raise Informative
-
-        e.message.should.include <<-EOS.strip
-It seems like you've changed the version of the dependency `Reachability`
-and it differs from the version stored in `Pods/Local Podspecs`.\nYou should run `pod update Reachability --no-repo-update` to apply
-        EOS
+        e.message.should.include "It seems like you've changed the version of the dependency `Reachability`"
+        e.message.should.include "should run `pod update Reachability --no-repo-update` to apply changes made locally."
       end
 
       it 'raises if it finds two conflicting dependencies' do
