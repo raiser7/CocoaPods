@@ -12,6 +12,9 @@ To install release candidates run `[sudo] gem install cocoapods --pre`
   [Orta Therox](https://github.com/orta)
   [#8536](https://github.com/CocoaPods/CocoaPods/pull/8536)
 
+* Add support for pods in abstract-only targets to be installed.  
+  [Samuel Giddins](https://github.com/segiddins)
+
 ##### Bug Fixes
 
 * Fix set `cache_root` from config file error  
